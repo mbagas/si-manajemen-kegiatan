@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('event_participants', function (Blueprint $table) {
             $table->id();
             $table->text('image');
-            $table->int('event_id');
-            $table->int('user_id');
+            $table->integer('event_id');
+            $table->integer('user_id');
             $table->boolean('availability')->default(0);
             $table->boolean('presence')->default(0);
             $table->timestamps();
