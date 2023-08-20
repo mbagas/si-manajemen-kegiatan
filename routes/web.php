@@ -1,8 +1,14 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\EventController;
+use App\Http\Controllers\FacilityController;
+use App\Http\Controllers\EventFacilityController;
+use App\Http\Controllers\EventParticipantController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
 /*
@@ -15,6 +21,12 @@ use Inertia\Inertia;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+Route::middleware(['Admin'])->name('admin.')->prefix('Admin')->group(function () {
+    Route::resource('user', UserController::class);
+    Route::resource('event', EventController::class);
+    Route::resource('facility', FacilityController::class);
+});
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
