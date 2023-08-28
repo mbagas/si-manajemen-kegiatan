@@ -17,6 +17,7 @@ return new class extends Migration
             $table->dateTime('date_time_start');
             $table->dateTime('date_time_end');
             $table->text('notulensi')->nullable();
+            $table->string('location');
             $table->timestamps();
         });
     }

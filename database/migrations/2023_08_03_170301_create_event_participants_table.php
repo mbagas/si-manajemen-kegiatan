@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('event_participants', function (Blueprint $table) {
             $table->id();
-            $table->text('image');
+            $table->text('image')->nullable();
             $table->integer('event_id');
             $table->integer('user_id');
             $table->boolean('availability')->default(0);

@@ -15,6 +15,7 @@ class Event extends Model
       'date_time_start',
       'date_time_end',
       'notulensi',
+      'location'
     ];
 
     public function event_participant(): HasMany
