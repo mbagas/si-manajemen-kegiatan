@@ -16,6 +16,8 @@ return new class extends Migration
             $table->text('image')->nullable();
             $table->integer('event_id');
             $table->integer('user_id');
+            $table->string('email');
+            $table->string('name');
             $table->boolean('availability')->default(0);
             $table->boolean('presence')->default(0);
             $table->timestamps();

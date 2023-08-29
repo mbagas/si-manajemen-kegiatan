@@ -2,10 +2,10 @@ import { AdminLayout } from "@/Layouts/AdminLayout";
 import { Head, useForm } from '@inertiajs/react';
 import { FilterMatchMode, FilterOperator } from 'primereact/api';
 import { DataTable } from 'primereact/datatable';
-import { Column } from 'primereact/column';
-import { useState } from "react";
 import { Button } from 'primereact/button';
 import { Link } from '@inertiajs/react';
+import { Column } from 'primereact/column';
+import { useState, useCallback, useEffect } from "react";
 
 
 export default function Event(props) {
@@ -49,6 +49,7 @@ export default function Event(props) {
 
   const actionTemplate = (rowData, column) => {
     return <div className="grid grid-cols-2 gap-1">
+      <Link href={route('admin.event.show', rowData)}><Button icon="pi pi-eye" severity="success" /></Link>
       <Link href={route('admin.event.edit', rowData)}><Button icon="pi pi-pencil" severity="warning" /></Link>
       <Button onClick={() => deleteevent(rowData)} icon="pi pi-trash" severity="danger" />
     </div>;

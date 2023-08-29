@@ -12,7 +12,7 @@ import { MultiSelect } from 'primereact/multiselect';
 export default function AddEvent(props) {
 
   console.log('props', props);
-  const { data, setData, post, processing, errors, reset } = useForm({
+  const { data, setData, patch, processing, errors, reset } = useForm({
     name: props.event.name,
     date_time_start: new Date(props.event.date_time_start),
     date_time_end: new Date(props.event.date_time_end),
