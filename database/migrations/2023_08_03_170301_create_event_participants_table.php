@@ -18,8 +18,8 @@ return new class extends Migration
             $table->integer('user_id');
             $table->string('email');
             $table->string('name');
-            $table->boolean('availability')->default(0);
-            $table->boolean('presence')->default(0);
+            $table->string('availability')->default('pending');
+            $table->string('presence')->default('tidak hadir');
             $table->timestamps();
         });
     }

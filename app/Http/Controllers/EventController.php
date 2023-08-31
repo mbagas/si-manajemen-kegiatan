@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use App\Notifications\EventNotification;
 use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\Auth;
 
 class EventController extends Controller
 {
@@ -23,11 +24,21 @@ class EventController extends Controller
   public function index()
   {
     //
-    $events = Event::orderBy('created_at', 'desc')->get();
-    return Inertia::render('Event/Index', [
-      'events' => $events->load('event_participant', 'event_facility', 'event_facility.facility', 'event_participant.user'),
-      'status' => session('status'),
-    ]);
+    $user = Auth::user();
+    if($user->role == 'admin') {
+      $events = Event::orderBy('created_at', 'desc')->get();
+      return Inertia::render('Event/Index', [
+        'events' => $events->load('event_participant', 'event_facility', 'event_facility.facility', 'event_participant.user'),
+        'status' => session('status'),
+      ]);
+    } 
+    else if ($user->role == 'staff') {
+      $event = event_participant::where('user_id', $user->id)->orderBy('created_at', 'desc')->get();
+      return Inertia::render('Event/Index', [
+        'event' => $event->load('event','event.event_facility', 'event.event_facility.facility', 'event.event_participant', 'event.event_participant.user'),
+      ]);
+    }
+    
   }
 
   /**
@@ -203,9 +214,9 @@ class EventController extends Controller
   public function destroy(Event $event)
   {
     //
-    // $event->event_facility()->delete();
-    // $event->event_participant()->delete();
-    // $event->delete();
-    // return to_route('admin.event.index')->with('status', 'Event deleted.');
+    $event->event_facility()->delete();
+    $event->event_participant()->delete();
+    $event->delete();
+    return to_route('admin.event.index')->with('status', 'Event deleted.');
   }
 }

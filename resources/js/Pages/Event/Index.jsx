@@ -1,11 +1,11 @@
 import { AdminLayout } from "@/Layouts/AdminLayout";
 import { Head, useForm } from '@inertiajs/react';
-import { FilterMatchMode, FilterOperator } from 'primereact/api';
+import { FilterMatchMode} from 'primereact/api';
 import { DataTable } from 'primereact/datatable';
 import { Button } from 'primereact/button';
 import { Link } from '@inertiajs/react';
 import { Column } from 'primereact/column';
-import { useState, useCallback, useEffect } from "react";
+import { useState } from "react";
 
 
 export default function Event(props) {
@@ -16,6 +16,13 @@ export default function Event(props) {
     date_time_start: { value: null, matchMode: FilterMatchMode.CONTAINS }
   })
   console.log(props);
+  let eventList = [];
+  if(props.auth.user.role === 'staff'){
+    eventList = props.event.map(data => {
+      return data.event;
+    })
+    console.log(eventList);
+  }
 
   const {
     data,
@@ -63,7 +70,7 @@ export default function Event(props) {
           Event
         </h2>
         <div className="mt-2">
-          <DataTable value={props.events} paginator rows={10} dataKey="id" filters={filters} filterDisplay="row" loading={loading}
+          <DataTable value={props.auth.user.role === 'staff'? eventList : props.events} paginator rows={10} dataKey="id" filters={filters} filterDisplay="row" loading={loading}
             globalFilterFields={['name', 'date_time_start']} header={header} emptyMessage="No data found."
             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
             currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" rowsPerPageOptions={[10, 25, 50]}>

@@ -117,7 +117,7 @@ export default function DetailEvent(props) {
               currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" rowsPerPageOptions={[10, 25, 50]}>
               <Column field="name" header="Name" filter filterPlaceholder="Search by Name" sortable style={{ minWidth: '12rem' }} />
               <Column field="availability" header="Ketersediaan Hadir" sortable style={{ minWidth: '12rem' }} />
-              <Column field="status" header="Status Hadir" sortable style={{ minWidth: '12rem' }} />
+              <Column field="presence" header="Status Hadir" sortable style={{ minWidth: '12rem' }} />
               <Column field="modifiedTime" header="Action" body={(e) => actionTemplate(e)} style={{ minWidth: '9rem' }} />
             </DataTable>
           </div>
