@@ -13,6 +13,7 @@ export default function AddEvent(props) {
 
   console.log('props', props);
   const { data, setData, patch, processing, errors, reset } = useForm({
+    id: props.event.id,
     name: props.event.name,
     date_time_start: new Date(props.event.date_time_start),
     date_time_end: new Date(props.event.date_time_end),
@@ -34,7 +35,7 @@ export default function AddEvent(props) {
   const submit = (e) => {
     e.preventDefault();
 
-    patch(route('admin.event.update'));
+    patch(route('admin.event.update', props.event.id));
   };
 
   return (

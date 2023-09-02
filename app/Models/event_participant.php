@@ -18,7 +18,7 @@ class event_participant extends Model
     'name',
     'email',
     'availability',
-    'precense',
+    'presence',
     'image',
   ];
 
@@ -35,7 +35,7 @@ class event_participant extends Model
   protected function image(): Attribute
   {
     return Attribute::make(
-      get: fn ($value) => [url('facility/' . $value), $value],
+      get: fn ($value) => [url('eventParticipant/' . $value), $value],
     );
   }
 }

@@ -23,6 +23,7 @@ use Inertia\Inertia;
 */
 Route::middleware(['Staff'])->name('staff.')->prefix('Staff')->group(function () {
   Route::resource('event', EventController::class);
+  Route::resource('event-participant', EventParticipantController::class);
 });
 
 Route::middleware(['Admin'])->name('admin.')->prefix('Admin')->group(function () {
