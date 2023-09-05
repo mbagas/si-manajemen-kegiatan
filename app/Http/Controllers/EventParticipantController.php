@@ -58,16 +58,16 @@ class EventParticipantController extends Controller
   {
     //
 
-    $request->validate([
-      'image'=>'required'
-    ]);
     if(is_file($request->image)){
       $fileName = $request->id . '.' . $request->image->extension();
       $request->image->move(public_path('eventParticipant'), $fileName);
-
       $event_participant->update([
-        'presence' => 'Hadir',
-        'image' => $request->filename,
+        'presence' => $request->presence,
+        'image' => $fileName,
+      ]);
+    } else {
+      $event_participant->update([
+        'availability' => $request->availability
       ]);
     }
     

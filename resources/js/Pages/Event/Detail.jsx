@@ -32,11 +32,22 @@ export default function DetailEvent(props) {
     event_id: props.auth.user.role === 'staff' ? eventPresence[0].event_id : '',
   });
   
+  const onSubmitAvailable = (e) => {
+    e.preventDefault();
+    setData('availability', 'Dapat Hadir');
+    console.log(data);
+    patch(route('staff.event-participant.update', data.id))
+  }
 
+  const onSubmitUnavailable = (e) => {
+    e.preventDefault();
+    setData('availability', 'Tidak Dapat Hadir');
+    patch(route('staff.event-participant.update', data.id))
+  }
 
   const onSubmitPresence = (e) => {
     e.preventDefault();
-    // setData('presence', 'Hadir');
+    setData('presence', 'Hadir');
     console.log(data);
     post(route('staff.event-participant.update', data.id, {
       _method: 'PATCH',
@@ -45,22 +56,16 @@ export default function DetailEvent(props) {
   }
 
 
-  const renderHeader = () => {
-    return (
-      <div className="flex justify-item-end">
-        <Button type="button" icon="pi pi-plus" label="Tambah" severity="success" />
-
-      </div>
-    );
-  };
-
-  const header = renderHeader();
 
   const actionTemplate = (rowData, column) => {
     return <div className="grid grid-cols-2 gap-1">
       <Button icon="pi pi-pencil" severity="warning" />
       <Button icon="pi pi-trash" severity="danger" />
     </div>;
+  }
+
+  const imageBodyTemplate = (rowData, column) => {
+    return <Image src={rowData.image[0]} onError={(e) => e.target.src = "https://webcolours.ca/wp-content/uploads/2020/10/webcolours-unknown.png"} alt="Image" width="100" preview />
   }
 
   return (
@@ -133,11 +138,59 @@ export default function DetailEvent(props) {
           {
             props.auth.user.role === 'staff' &&
             <div className="grid grid-cols-1 gap-y-2 px-4 py-5 bg-white rounded-lg shadow">
-              <h2 className="text-2xl font-bold">
+              
+              <h2 className="text-2xl font-bold mb-2">
+                Konfirmasi Kehadiran
+              </h2>
+              <form>
+                  <div className="grid md:grid-cols-2 gap-2 justify-items-center mb-4">
+                  <Button icon="pi pi-check" label="Dapat Hadir" severity="success" onClick={onSubmitAvailable}/>
+                  <Button icon="pi pi-times" label="Tidak Dapat Hadir" severity="danger" onClick={onSubmitUnavailable}/>
+                </div>
+              </form>
+              {
+                data.availability === 'Dapat Hadir' &&
+                <>
+                    <h2 className="text-2xl font-bold mb-2">
+                      Isi Presensi
+                    </h2>
+                    <form onSubmit={onSubmitPresence}>
+                      <div className="grid grid-cols-2 grid-cols-6 gap-2">
+                        <div>
+                          <label className="font-medium text-sm text-gray-700">
+                            Photo :
+                          </label>
+                        </div>
+                        <div className="col-span-5">
+                          <input
+                            className="block w-full text-sm text-slate-500
+                  file:mr-4 file:py-2 file:px-4
+                  file:rounded-full file:border-0
+                  file:text-sm file:font-semibold
+                  file:bg-violet-50 file:text-violet-700
+                  hover:file:bg-violet-100"
+                            type="file"
+                            name="image"
+                            accept="image/*"
+                            capture="user"
+                            onChange={(e) => {
+                              setData("image", e.target.files[0]);
+                            }
+                            } />
+                        </div>
+                      </div>
+                      <div className="mt-4">
+                        <PrimaryButton className="ml-4" disabled={processing}>
+                          Submit
+                        </PrimaryButton>
+                      </div>
+                    </form></>
+              }
+              {/* <h2 className="text-2xl font-bold">
                 Isi Presensi
               </h2>
                 <form onSubmit={onSubmitPresence}>
-                <div className="grid grid-cols-2 md:grid-cols-6 gap-x-2">
+                <div className="grid grid-cols-2 md:grid-cols-6 gap-2">
                   <div>
                     <label className="font-medium text-sm text-gray-700">
                       Photo :
@@ -166,7 +219,7 @@ export default function DetailEvent(props) {
                       Submit
                     </PrimaryButton>
                 </div>
-              </form>
+              </form> */}
             </div>
           }
 
@@ -178,14 +231,20 @@ export default function DetailEvent(props) {
           </h4>
           <div className="mt-2">
             <DataTable value={props.event.event_participant} paginator rows={10} dataKey="id" filters={filters} filterDisplay="row" loading={loading}
-              globalFilterFields={['name', 'availablelity', 'status']} header={header} emptyMessage="No data found."
+              globalFilterFields={['name', 'availablelity', 'status']} emptyMessage="No data found."
               paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
               currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" rowsPerPageOptions={[10, 25, 50]}>
               <Column field="name" header="Name" filter filterPlaceholder="Search by Name" sortable style={{ minWidth: '12rem' }} />
               <Column field="availability" header="Ketersediaan Hadir" sortable style={{ minWidth: '12rem' }} />
               <Column field="presence" header="Status Hadir" sortable style={{ minWidth: '12rem' }} />
+              
               {
-                props.auth.user.role === 'admin' && <Column field="modifiedTime" header="Action" body={(e) => actionTemplate(e)} style={{ minWidth: '9rem' }} />
+                props.auth.user.role === 'admin' && 
+                <Column header="Image" body={imageBodyTemplate} />
+              }
+              {
+                props.auth.user.role === 'admin' && 
+                  <Column field="modifiedTime" header="Action" body={(e) => actionTemplate(e)} style={{ minWidth: '9rem' }} />
               }
 
             </DataTable>
