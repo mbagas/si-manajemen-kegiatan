@@ -12,6 +12,11 @@ import PrimaryButton from '@/Components/PrimaryButton';
 export default function DetailEvent(props) {
   console.log(props);
   const [loading, setLoading] = useState(false);
+  let ç = props.event.event_facility.map(data => ({
+    name: data.facility.name,
+    quantity: data.quantity,
+    status: data.status
+  }))
   const [filters, setFilters] = useState({
     name: { value: null, matchMode: FilterMatchMode.CONTAINS },
   })
@@ -31,7 +36,7 @@ export default function DetailEvent(props) {
     user_id: props.auth.user.role === 'staff' ? eventPresence[0].user_id : '',
     event_id: props.auth.user.role === 'staff' ? eventPresence[0].event_id : '',
   });
-  
+
   const onSubmitAvailable = (e) => {
     e.preventDefault();
     setData('availability', 'Dapat Hadir');
@@ -54,8 +59,14 @@ export default function DetailEvent(props) {
       image: data.image,
     }));
   }
+  
+  const onSubmitFacilityAvailable = (e) => {
 
+  }
 
+  const onSubmitFacilityUnavailable = (e) => {
+
+  }
 
   const actionTemplate = (rowData, column) => {
     return <div className="grid grid-cols-2 gap-1">
@@ -64,12 +75,19 @@ export default function DetailEvent(props) {
     </div>;
   }
 
+  const actionFacilityTemplate = (rowData, column) => {
+    return <div className="grid grid-cols-2 gap-1">
+      <Button icon="pi pi-times" severity="warning" label="Tidak Tersedia" onClick={onSubmitFacilityUnavailable}/>
+      <Button icon="pi pi-check" severity="danger" label="Tersedia" onClick={onSubmitFacilityAvailable}/>
+    </div>;
+  }
+
   const imageBodyTemplate = (rowData, column) => {
     return <Image src={rowData.image[0]} onError={(e) => e.target.src = "https://webcolours.ca/wp-content/uploads/2020/10/webcolours-unknown.png"} alt="Image" width="100" preview />
   }
 
   return (
-    <AdminLayout>
+    <AdminLayout user={props.auth.user}>
       <Head title="Detail Event" />
       <div className="grid grid-cols-1 gap-6 md:gap-4">
         <div className={`grid grid-cols-1 ${props.auth.user.role === 'staff' ? "md:grid-cols-2" : "grid-cols-1"} gap-6 md:gap-4`}>
@@ -149,7 +167,7 @@ export default function DetailEvent(props) {
                 </div>
               </form>
               {
-                data.availability === 'Dapat Hadir' &&
+                  (data.availability === 'Dapat Hadir' && Date.now() >= new Date(props.event.date_time_start).getTime()) &&
                 <>
                     <h2 className="text-2xl font-bold mb-2">
                       Isi Presensi
@@ -186,70 +204,55 @@ export default function DetailEvent(props) {
                       </div>
                     </form></>
               }
-              {/* <h2 className="text-2xl font-bold">
-                Isi Presensi
-              </h2>
-                <form onSubmit={onSubmitPresence}>
-                <div className="grid grid-cols-2 md:grid-cols-6 gap-2">
-                  <div>
-                    <label className="font-medium text-sm text-gray-700">
-                      Photo :
-                    </label>
-                  </div>
-                  <div className="md:col-span-5">
-                    <input
-                      className="block w-full text-sm text-slate-500
-                  file:mr-4 file:py-2 file:px-4
-                  file:rounded-full file:border-0
-                  file:text-sm file:font-semibold
-                  file:bg-violet-50 file:text-violet-700
-                  hover:file:bg-violet-100"
-                      type="file"
-                      name="image"
-                      accept="image/*"
-                      capture="user"
-                      onChange={(e) => {
-                        setData("image", e.target.files[0]);
-                      }
-                      } />
-                  </div>
-                </div>
-                <div>
-                    <PrimaryButton className="ml-4" disabled={processing}>
-                      Submit
-                    </PrimaryButton>
-                </div>
-              </form> */}
             </div>
           }
 
         </div>
 
-        <div className="px-4 py-5 bg-white rounded-lg shadow">
-          <h4 className="text-xl font-bold">
-            Daftar Peserta
-          </h4>
-          <div className="mt-2">
-            <DataTable value={props.event.event_participant} paginator rows={10} dataKey="id" filters={filters} filterDisplay="row" loading={loading}
-              globalFilterFields={['name', 'availablelity', 'status']} emptyMessage="No data found."
-              paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-              currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" rowsPerPageOptions={[10, 25, 50]}>
-              <Column field="name" header="Name" filter filterPlaceholder="Search by Name" sortable style={{ minWidth: '12rem' }} />
-              <Column field="availability" header="Ketersediaan Hadir" sortable style={{ minWidth: '12rem' }} />
-              <Column field="presence" header="Status Hadir" sortable style={{ minWidth: '12rem' }} />
-              
-              {
-                props.auth.user.role === 'admin' && 
-                <Column header="Image" body={imageBodyTemplate} />
-              }
-              {
-                props.auth.user.role === 'admin' && 
-                  <Column field="modifiedTime" header="Action" body={(e) => actionTemplate(e)} style={{ minWidth: '9rem' }} />
-              }
+        {
+          props.auth.user.role === 'office_maid' ? <div className="px-4 py-5 bg-white rounded-lg shadow">
+            <h4 className="text-xl font-bold">
+              Daftar Fasilitas
+            </h4>
+            <div className="mt-2">
+              <DataTable value={eventFacility} paginator rows={10} dataKey="id" filters={filters} filterDisplay="row" loading={loading}
+                globalFilterFields={['name', 'availablelity', 'status']} emptyMessage="No data found."
+                paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
+                currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" rowsPerPageOptions={[10, 25, 50]}>
+                <Column field="name" header="Name" filter filterPlaceholder="Search by Name" sortable style={{ minWidth: '12rem' }} />
+                <Column field="quantity" header="Jumlah Fasilitas" sortable style={{ minWidth: '12rem' }} />
+                <Column field="status" header="Status Fasilitas" sortable style={{ minWidth: '12rem' }} />
+                <Column field="modifiedTime" header="Action" body={(e) => actionFacilityTemplate(e)} style={{ minWidth: '9rem' }} />
+              </DataTable>
+            </div>
+          </div> :
+            <div className="px-4 py-5 bg-white rounded-lg shadow">
+              <h4 className="text-xl font-bold">
+                Daftar Peserta
+              </h4>
+              <div className="mt-2">
+                <DataTable value={props.event.event_participant} paginator rows={10} dataKey="id" filters={filters} filterDisplay="row" loading={loading}
+                  globalFilterFields={['name', 'availablelity', 'status']} emptyMessage="No data found."
+                  paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
+                  currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" rowsPerPageOptions={[10, 25, 50]}>
+                  <Column field="name" header="Name" filter filterPlaceholder="Search by Name" sortable style={{ minWidth: '12rem' }} />
+                  <Column field="availability" header="Ketersediaan Hadir" sortable style={{ minWidth: '12rem' }} />
+                  <Column field="presence" header="Status Hadir" sortable style={{ minWidth: '12rem' }} />
 
-            </DataTable>
-          </div>
-        </div>
+                  {
+                    props.auth.user.role === 'admin' &&
+                    <Column header="Image" body={imageBodyTemplate} />
+                  }
+                  {
+                    props.auth.user.role === 'admin' &&
+                    <Column field="modifiedTime" header="Action" body={(e) => actionTemplate(e)} style={{ minWidth: '9rem' }} />
+                  }
+
+                </DataTable>
+              </div>
+            </div>
+        }
+        
       </div>
     </AdminLayout>
   )

@@ -26,6 +26,12 @@ Route::middleware(['Staff'])->name('staff.')->prefix('Staff')->group(function ()
   Route::resource('event-participant', EventParticipantController::class);
 });
 
+Route::middleware(['OfficeMaid'])->name('officeMaid.')->prefix('OfficeMaid')->group(function () {
+  Route::resource('event', EventController::class);
+  Route::resource('event-facility', EventFacilityController::class);
+  Route::resource('facility', FacilityController::class);
+});
+
 Route::middleware(['Admin'])->name('admin.')->prefix('Admin')->group(function () {
   Route::resource('user', UserController::class);
   Route::resource('event', EventController::class);

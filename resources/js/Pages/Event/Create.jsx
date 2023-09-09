@@ -33,7 +33,7 @@ export default function AddEvent(props) {
   };
 
   return (
-    <AdminLayout dataRequestCount={props.dataRequestCount}>
+    <AdminLayout user={props.auth.user} dataRequestCount={props.dataRequestCount}>
       <Head title="Add event" />
       <div className="w-full px-4 py-5 bg-white rounded-lg shadow">
         <h2 className="text-2xl font-bold">

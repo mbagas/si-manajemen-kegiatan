@@ -55,15 +55,20 @@ export default function Event(props) {
   const header = renderHeader();
 
   const actionTemplate = (rowData, column) => {
-    return <div className="grid grid-cols-2 gap-1">
-      <Link href={props.auth.user.role === 'admin' ? route('admin.event.show', rowData) : props.auth.user.role === 'staff' ? route('staff.event.show', rowData) : route('officeMain.event.show', rowData)}><Button icon="pi pi-eye" severity="success" /></Link>
-      <Link href={route('admin.event.edit', rowData)}><Button icon="pi pi-pencil" severity="warning" /></Link>
-      <Button onClick={() => deleteevent(rowData)} icon="pi pi-trash" severity="danger" />
+    return <div className="grid grid-cols-3 gap-1">
+      <Link href={props.auth.user.role === 'admin' ? route('admin.event.show', rowData) : props.auth.user.role === 'staff' ? route('staff.event.show', rowData) : route('officeMaid.event.show', rowData)}><Button icon="pi pi-eye" severity="success" /></Link>
+      {
+        props.auth.user.role === 'admin' && <>
+          <Link href={route('admin.event.edit', rowData)}><Button icon="pi pi-pencil" severity="warning" /></Link>
+          <Button onClick={() => deleteevent(rowData)} icon="pi pi-trash" severity="danger" />
+        </>
+      }
+      
     </div>;
   }
 
   return (
-    <AdminLayout dataRequestCount={props.dataRequestCount}>
+    <AdminLayout user={props.auth.user} dataRequestCount={props.dataRequestCount}>
       <Head title="event" />
       <div className="w-full px-4 py-5 bg-white rounded-lg shadow">
         <h2 className="text-2xl font-bold">

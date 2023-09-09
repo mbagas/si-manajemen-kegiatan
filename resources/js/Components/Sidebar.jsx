@@ -4,7 +4,7 @@ import { Image } from 'primereact/image';
 export default function Sidebar({ children, ...props }) {
   const [open, setOpen] = useState(false);
   const [collapse, setCollapse] = useState(true);
-  console.log('data request count : ', props.dataRequestCount)
+  console.log('data request count : ', props)
   return (
     <>
       <div className="w-screen px-5 py-2 flex justify-between border-b-2 border-gray-300">
@@ -36,6 +36,9 @@ export default function Sidebar({ children, ...props }) {
               </h2>
             </div>
             <div className="flex-1">
+              {
+                props.user.role === 'admin' && 
+                
               <ul className="pt-2 pb-4 space-y-1 text-sm">
                 <li className="rounded-sm">
                   <Link
@@ -70,16 +73,16 @@ export default function Sidebar({ children, ...props }) {
                 </li>
                 <li className="rounded-sm">
                   <Link
-                    href='#'
+                    href={route('admin.facility.index')}
                     className="flex items-center p-2 space-x-3 rounded-md"
-                  >
+                  >      ===
                     <i className="pi pi-flag" style={{ color: 'white', fontSize: '1.5rem' }}></i>
                     <span className="text-gray-100">Master Data Fasilitas</span>
                   </Link>
                 </li>
                 <li className="rounded-sm">
                   <Link
-                    href='#'
+                    href={route('admin.event.index')}
                     className="flex items-center p-2 space-x-3 rounded-md"
                   >
                     <i className="pi pi-book" style={{ color: 'white', fontSize: '1.5rem' }}></i>
@@ -88,33 +91,8 @@ export default function Sidebar({ children, ...props }) {
                 </li>
                 <li className="rounded-sm">
                   <Link
-                    href='#'
-                    className="flex items-center p-2 space-x-3 rounded-md"
-                  >
-                    <i className="pi pi-send" style={{ color: 'white', fontSize: '1.5rem' }}></i>
-                    <span className="text-gray-100">Permintaan Data</span>
-                    {
-                      props.dataRequestCount > 0 && (
-                        <>
-                          <span className="flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 transform bg-red-600 rounded-full">{props.dataRequestCount}</span>
-                        </>
-                      )
-                    }
-                  </Link>
-                </li>
-                <li className="rounded-sm">
-                  <Link
-                    href='#'
-                    className="flex items-center p-2 space-x-3 rounded-md"
-                  >
-                    <i className="pi pi-file" style={{ color: 'white', fontSize: '1.5rem' }}></i>
-                    <span className="text-gray-100">Buku Kebun</span>
-                  </Link>
-                </li>
-                <li className="rounded-sm">
-                  <Link
                     method="post"
-                    href='#'
+                    href={route('logout')}
                     className="flex items-center p-2 space-x-3 rounded-md"
                   >
                     <svg
@@ -137,6 +115,140 @@ export default function Sidebar({ children, ...props }) {
                   </Link>
                 </li>
               </ul>
+              }
+              {
+                props.user.role === 'staff' &&
+                <ul className="pt-2 pb-4 space-y-1 text-sm">
+                  <li className="rounded-sm">
+                    <Link
+                      href={route('dashboard')}
+                      className="flex items-center p-2 space-x-3 rounded-md"
+                    >
+                      <svg
+                        xmlns="https://icons8.com/icon/102074/oak-tree"
+                        className="w-6 h-6 text-gray-100"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth={2}
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
+                        />
+                      </svg>
+                      <span className="text-gray-100">Home</span>
+                    </Link>
+                  </li>
+                  <li className="rounded-sm">
+                    <Link
+                      href={route('staff.event.index')}
+                      className="flex items-center p-2 space-x-3 rounded-md"
+                    >
+                      <i className="pi pi-book" style={{ color: 'white', fontSize: '1.5rem' }}></i>
+                      <span className="text-gray-100">Data Kegiatan</span>
+                    </Link>
+                  </li>
+
+                  <li className="rounded-sm">
+                    <Link
+                      method="post"
+                      href={route('logout')}
+                      className="flex items-center p-2 space-x-3 rounded-md"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="w-6 h-6 text-gray-100"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth={2}
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"
+                        />
+                      </svg>
+                      <span className="text-gray-100">
+                        Logout
+                      </span>
+                    </Link>
+                  </li>
+                </ul>
+              }
+              {
+                props.user.role === 'office_maid' &&
+                <ul className="pt-2 pb-4 space-y-1 text-sm">
+                  <li className="rounded-sm">
+                    <Link
+                      href={route('dashboard')}
+                      className="flex items-center p-2 space-x-3 rounded-md"
+                    >
+                      <svg
+                        xmlns="https://icons8.com/icon/102074/oak-tree"
+                        className="w-6 h-6 text-gray-100"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth={2}
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
+                        />
+                      </svg>
+                      <span className="text-gray-100">Home</span>
+                    </Link>
+                  </li>
+                  <li className="rounded-sm">
+                    <Link
+                      href={route('staff.event.index')}
+                      className="flex items-center p-2 space-x-3 rounded-md"
+                    >
+                      <i className="pi pi-book" style={{ color: 'white', fontSize: '1.5rem' }}></i>
+                      <span className="text-gray-100">Data Kegiatan</span>
+                    </Link>
+                  </li>
+                    <li className="rounded-sm">
+                      <Link
+                        href={route('admin.facility.index')}
+                        className="flex items-center p-2 space-x-3 rounded-md"
+                      >
+                        <i className="pi pi-flag" style={{ color: 'white', fontSize: '1.5rem' }}></i>
+                        <span className="text-gray-100">Master Data Fasilitas</span>
+                      </Link>
+                    </li>
+
+                  <li className="rounded-sm">
+                    <Link
+                      method="post"
+                      href={route('logout')}
+                      className="flex items-center p-2 space-x-3 rounded-md"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="w-6 h-6 text-gray-100"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth={2}
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"
+                        />
+                      </svg>
+                      <span className="text-gray-100">
+                        Logout
+                      </span>
+                    </Link>
+                  </li>
+                </ul>
+              }
             </div>
           </div>
         </div>

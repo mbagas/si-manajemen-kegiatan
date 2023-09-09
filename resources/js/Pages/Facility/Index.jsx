@@ -55,7 +55,7 @@ export default function facility(props) {
   }
 
   return (
-    <AdminLayout dataRequestCount={props.dataRequestCount}>
+    <AdminLayout user={props.auth.user} dataRequestCount={props.dataRequestCount}>
       <Head title="facility" />
       <div className="w-full px-4 py-5 bg-white rounded-lg shadow">
         <h2 className="text-2xl font-bold">

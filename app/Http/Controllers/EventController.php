@@ -25,20 +25,17 @@ class EventController extends Controller
   {
     //
     $user = Auth::user();
-    if($user->role == 'admin') {
-      $events = Event::orderBy('created_at', 'desc')->get();
-      return Inertia::render('Event/Index', [
-        'events' => $events->load('event_participant', 'event_facility', 'event_facility.facility', 'event_participant.user'),
-        'status' => session('status'),
-      ]);
-    } 
-    else if ($user->role == 'staff') {
+    if ($user->role == 'staff') {
       $event = event_participant::where('user_id', $user->id)->orderBy('created_at', 'desc')->get();
       return Inertia::render('Event/Index', [
-        'event' => $event->load('event','event.event_facility', 'event.event_facility.facility', 'event.event_participant', 'event.event_participant.user'),
+        'event' => $event->load('event', 'event.event_facility', 'event.event_facility.facility', 'event.event_participant', 'event.event_participant.user'),
       ]);
     }
-    
+    $events = Event::orderBy('created_at', 'desc')->get();
+    return Inertia::render('Event/Index', [
+      'events' => $events->load('event_participant', 'event_facility', 'event_facility.facility', 'event_participant.user'),
+      'status' => session('status'),
+    ]);
   }
 
   /**
@@ -143,7 +140,7 @@ class EventController extends Controller
   {
     //
     // dd($event->load('event_participant', 'event_facility', 'event_participant.user', 'event_facility.facility'));
-    return Inertia::render('Event/Detail',[
+    return Inertia::render('Event/Detail', [
       'event' => $event->load('event_participant', 'event_facility', 'event_participant.user', 'event_facility.facility'),
     ]);
   }

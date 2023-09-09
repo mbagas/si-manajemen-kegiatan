@@ -4,7 +4,7 @@ export function AdminLayout({ children, ...props }) {
   return (
     <>
       <div className="w-100">
-        <Sidebar dataRequestCount={props.dataRequestCount}>
+        <Sidebar user={props.user}>
           {children}
         </Sidebar>
       </div>
