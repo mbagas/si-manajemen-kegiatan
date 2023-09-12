@@ -36,6 +36,7 @@ Route::middleware(['Admin'])->name('admin.')->prefix('Admin')->group(function ()
   Route::resource('user', UserController::class);
   Route::resource('event', EventController::class);
   Route::resource('facility', FacilityController::class);
+  Route::PATCH('/event/{event}/notulensi', [EventController::class, 'updateNotulensi'])->name('event.updateNotulensi');
 });
 
 

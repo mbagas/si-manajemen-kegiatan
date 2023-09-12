@@ -1,5 +1,5 @@
 import { AdminLayout } from "@/Layouts/AdminLayout";
-import { Head, Link, useForm } from '@inertiajs/react';
+import { Head, Link, useForm} from '@inertiajs/react';
 import { Image } from 'primereact/image';
 import { Button } from 'primereact/button';
 import { DataTable } from 'primereact/datatable';
@@ -8,11 +8,13 @@ import { useState, useCallback, useEffect } from "react";
 import InputLabel from '@/Components/InputLabel';
 import { FilterMatchMode, FilterOperator } from 'primereact/api';
 import PrimaryButton from '@/Components/PrimaryButton';
+import { useMemo } from "react";
 
 export default function DetailEvent(props) {
   console.log(props);
   const [loading, setLoading] = useState(false);
-  let ç = props.event.event_facility.map(data => ({
+  let eventFacility = props.event.event_facility.map(data => ({
+    id: data.id,
     name: data.facility.name,
     quantity: data.quantity,
     status: data.status
@@ -25,7 +27,7 @@ export default function DetailEvent(props) {
     return data.user_id == props.auth.user.id
   })
   console.log(eventPresence);
-  const { data, setData, post, delete: destroy, processing, errors, patch, transform } = useForm({
+  const { data, setData, post, delete: destroy, processing, errors, patch, put, transform } = useForm({
     _method: 'patch',
     id: props.auth.user.role === 'staff' ? eventPresence[0].id : '',
     availability: props.auth.user.role === 'staff' ? eventPresence[0].availability : '',
@@ -35,6 +37,8 @@ export default function DetailEvent(props) {
     email: props.auth.user.role === 'staff' ? eventPresence[0].email : '',
     user_id: props.auth.user.role === 'staff' ? eventPresence[0].user_id : '',
     event_id: props.auth.user.role === 'staff' ? eventPresence[0].event_id : '',
+    status: '',
+    notulensi: '',
   });
 
   const onSubmitAvailable = (e) => {
@@ -60,25 +64,45 @@ export default function DetailEvent(props) {
     }));
   }
   
-  const onSubmitFacilityAvailable = (e) => {
-
+  const onSubmitFacilityAvailable = async (rowData) => {
+    setData({
+      id:rowData.id,
+      status: 'Tersedia'
+    })
   }
 
-  const onSubmitFacilityUnavailable = (e) => {
+  const onSubmitFacilityUnavailable = async (rowData) => {
+    setData({
+      id: rowData.id,
+      status: 'Tidak Tersedia'
+    })
+  }
 
+  useMemo(() => {
+    if(data.id && data.status) {
+      patch(route('officeMaid.event-facility.update', data.id))
+    }
+  }, [data.status])
+
+  const onSubmitNotulensi = (e) => {
+    e.preventDefault();
+    post(route('admin.event.updateNotulensi', props.event.id, {
+      _method: 'PATCH',
+      notulensi: data.notulensi,
+    }));
   }
 
   const actionTemplate = (rowData, column) => {
-    return <div className="grid grid-cols-2 gap-1">
+    return <div className="grid grid-cols-2 gap-2">
       <Button icon="pi pi-pencil" severity="warning" />
       <Button icon="pi pi-trash" severity="danger" />
     </div>;
   }
 
   const actionFacilityTemplate = (rowData, column) => {
-    return <div className="grid grid-cols-2 gap-1">
-      <Button icon="pi pi-times" severity="warning" label="Tidak Tersedia" onClick={onSubmitFacilityUnavailable}/>
-      <Button icon="pi pi-check" severity="danger" label="Tersedia" onClick={onSubmitFacilityAvailable}/>
+    return <div className="grid grid-cols-2 gap-2">
+      <Button icon="pi pi-times" severity="danger" label="Tidak Tersedia" onClick={() => onSubmitFacilityUnavailable(rowData)} />
+      <Button icon="pi pi-check" severity="success" label="Tersedia" onClick={() => onSubmitFacilityAvailable(rowData)} />
     </div>;
   }
 
@@ -90,7 +114,7 @@ export default function DetailEvent(props) {
     <AdminLayout user={props.auth.user}>
       <Head title="Detail Event" />
       <div className="grid grid-cols-1 gap-6 md:gap-4">
-        <div className={`grid grid-cols-1 ${props.auth.user.role === 'staff' ? "md:grid-cols-2" : "grid-cols-1"} gap-6 md:gap-4`}>
+        <div className={`grid grid-cols-1 ${props.auth.user.role === 'office_maid' ? "md:grid-cols-1" : "md:grid-cols-2"} gap-6 md:gap-4`}>
           <div className="grid grid-cols-1 gap-y-2 px-4 py-5 bg-white rounded-lg shadow">
             <h2 className="text-2xl font-bold">
               Detail Event
@@ -152,6 +176,22 @@ export default function DetailEvent(props) {
                 </ul>
               </div>
             </div>
+            {
+              props.auth.user.role === 'staff' && 
+              <div className="grid grid-cols-2 md:grid-cols-6 gap-x-2">
+                <div>
+                  <label className="font-medium text-sm text-gray-700">
+                    Notulensi :
+                  </label>
+                </div>
+                <div className="md:col-span-5">
+                  <label className="font-medium text-sm text-gray-700">
+                    {props.event.notulensi ? <a className="text-blue-600" href={props.event.notulensi[0]} target="_blank">Dokumen Notulensi</a> : <label>Tidak ada notulensi</label>}
+                  </label>
+                </div>
+              </div>
+            }
+            
           </div>
           {
             props.auth.user.role === 'staff' &&
@@ -206,6 +246,44 @@ export default function DetailEvent(props) {
               }
             </div>
           }
+          {
+            props.auth.user.role === 'admin' &&
+            <div className="grid grid-cols-1 gap-y-2 px-4 py-5 bg-white rounded-lg shadow">
+                <h2 className="text-2xl font-bold mb-2">
+                  Notulensi
+                </h2>
+                <form onSubmit={onSubmitNotulensi}>
+                  <div className="grid mb-2">
+                    <div>
+                      <label className="font-medium text-sm text-gray-700">
+                        Notulensi : {props.event.notulensi ? <a className="text-blue-600" href={props.event.notulensi[0]} target="_blank">Dokumen Notulensi</a> : <label>Tidak ada notulensi</label>}
+                      </label>
+                    </div>
+                  </div>
+                  <div>
+                    <input
+                      className="block w-full text-sm text-slate-500
+                  file:mr-4 file:py-2 file:px-4
+                  file:rounded-full file:border-0
+                  file:text-sm file:font-semibold
+                  file:bg-violet-50 file:text-violet-700
+                  hover:file:bg-violet-100"
+                      type="file"
+                      name="notulensi"
+                      accept=".doc,.docx,.pdf"
+                      onChange={(e) => {
+                        setData("notulensi", e.target.files[0]);
+                      }
+                      } />
+                  </div>
+                  <div className="mt-4">
+                    <PrimaryButton className="ml-4" disabled={processing}>
+                      Submit
+                    </PrimaryButton>
+                  </div>
+                </form>
+            </div>
+          }
 
         </div>
 
@@ -216,7 +294,7 @@ export default function DetailEvent(props) {
             </h4>
             <div className="mt-2">
               <DataTable value={eventFacility} paginator rows={10} dataKey="id" filters={filters} filterDisplay="row" loading={loading}
-                globalFilterFields={['name', 'availablelity', 'status']} emptyMessage="No data found."
+                globalFilterFields={['name', 'quantity', 'status']} emptyMessage="No data found."
                 paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
                 currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" rowsPerPageOptions={[10, 25, 50]}>
                 <Column field="name" header="Name" filter filterPlaceholder="Search by Name" sortable style={{ minWidth: '12rem' }} />

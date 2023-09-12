@@ -54,6 +54,10 @@ class EventFacilityController extends Controller
     public function update(Request $request, event_facility $event_facility)
     {
         //
+        $event_facility->update([
+          'status' => $request['status'],
+        ]);
+        return back();
     }
 
     /**

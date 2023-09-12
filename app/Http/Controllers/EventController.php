@@ -115,6 +115,20 @@ class EventController extends Controller
         $participants = event_participant::where('event_id', $event->id)->get();
         // $participants->notify(new EventNotification($mailData));
         Notification::send($participants, new EventNotification($mailData));
+        
+        $officeMaidMailData = 
+          [
+          'body' => 'Terdapat pengajuan fasilitas pada kegiatan ' . $request->name . '.',
+          'date' => 'Waktu : ' . Carbon::parse($request->date_time_start),
+          'location' => 'Lokasi : ' . $request->location,
+          'confirm' => 'Lakukan konfirmasi ketersediaan fasilitas pada link dibawah ini.',
+          'thanks' => 'Terima Kasih',
+          'actionText' => 'Buka Web Manajemen Kegiatan Untuk Melihat Detail',
+          'actionURL' => url('/'),
+          ];
+        $officeMaid = User::where('role', 'office_maid')->get();
+        Notification::send($officeMaid, new EventNotification($officeMaidMailData));
+
       }
     );
 
@@ -211,9 +225,23 @@ class EventController extends Controller
   public function destroy(Event $event)
   {
     //
+    dd($event->event_facility());
     $event->event_facility()->delete();
     $event->event_participant()->delete();
     $event->delete();
     return to_route('admin.event.index')->with('status', 'Event deleted.');
+  }
+
+  public function updateNotulensi(Request $request, Event $event)
+  {
+   
+    if (is_file($request->notulensi)) {
+      $fileName = $event->id . '.' . $request->notulensi->extension();
+      $request->notulensi->move(public_path('notulensi'), $fileName);
+      $event->update([
+        'notulensi' => $fileName
+      ]);
+      return back();
+    } 
   }
 }
