@@ -41,12 +41,7 @@ Route::middleware(['Admin'])->name('admin.')->prefix('Admin')->group(function ()
 
 
 Route::get('/', function () {
-  return Inertia::render('Welcome', [
-    'canLogin' => Route::has('login'),
-    'canRegister' => Route::has('register'),
-    'laravelVersion' => Application::VERSION,
-    'phpVersion' => PHP_VERSION,
-  ]);
+  return to_route('login');
 });
 
 Route::get('/dashboard', function () {
