@@ -31,7 +31,7 @@ export default function facility(props) {
   const renderHeader = () => {
     return (
       <div className="flex justify-item-end">
-        <Link href={route('admin.facility.create')}>
+        <Link href={props.auth.user.role === 'admin' ? route('admin.facility.create') : route('officeMaid.facility.create')}>
           <Button type="button" label="Tambah" icon="pi pi-plus" severity="success" />
         </Link>
 
@@ -41,7 +41,11 @@ export default function facility(props) {
 
   function deletefacility(facility) {
     if (confirm("Are you sure you want to delete this facility?")) {
-      destroy(route("admin.facility.destroy", facility.id));
+      if (props.auth.user.role === 'admin'){
+        destroy(route("admin.facility.destroy", facility.id));
+      } else {
+        destroy(route("officeMaid.facility.destroy", facility.id));
+      }
     }
   }
 
@@ -49,13 +53,13 @@ export default function facility(props) {
 
   const actionTemplate = (rowData, column) => {
     return <div className="grid grid-cols-2 gap-1">
-      <Link href={route('admin.facility.edit', rowData)}><Button icon="pi pi-pencil" severity="warning" /></Link>
+      <Link href={props.auth.user.role === 'admin' ? route('admin.facility.edit', rowData) : route('officeMaid.facility.edit', rowData)}><Button icon="pi pi-pencil" severity="warning" /></Link>
       <Button onClick={() => deletefacility(rowData)} icon="pi pi-trash" severity="danger" />
     </div>;
   }
 
   return (
-    <AdminLayout user={props.auth.user} dataRequestCount={props.dataRequestCount}>
+    <AdminLayout user={props.auth.user} >
       <Head title="facility" />
       <div className="w-full px-4 py-5 bg-white rounded-lg shadow">
         <h2 className="text-2xl font-bold">

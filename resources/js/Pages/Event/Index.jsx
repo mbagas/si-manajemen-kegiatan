@@ -38,10 +38,9 @@ export default function Event(props) {
   const renderHeader = () => {
     return (
       <div className="flex justify-item-end">
-        <Link href={route('admin.event.create')}>
-          <Button type="button" label="Tambah" icon="pi pi-plus" severity="success" />
-        </Link>
-
+            <Link href={route('admin.event.create')}>
+              <Button type="button" label="Tambah" icon="pi pi-plus" severity="success" />
+            </Link>
       </div>
     );
   };
@@ -68,7 +67,7 @@ export default function Event(props) {
   }
 
   return (
-    <AdminLayout user={props.auth.user} dataRequestCount={props.dataRequestCount}>
+    <AdminLayout user={props.auth.user} >
       <Head title="event" />
       <div className="w-full px-4 py-5 bg-white rounded-lg shadow">
         <h2 className="text-2xl font-bold">
@@ -76,7 +75,7 @@ export default function Event(props) {
         </h2>
         <div className="mt-2">
           <DataTable value={props.auth.user.role === 'staff'? eventList : props.events} paginator rows={10} dataKey="id" filters={filters} filterDisplay="row" loading={loading}
-            globalFilterFields={['name', 'date_time_start']} header={header} emptyMessage="No data found."
+            globalFilterFields={['name', 'date_time_start']} header={props.auth.user.role === 'admin' && header} emptyMessage="No data found."
             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
             currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" rowsPerPageOptions={[10, 25, 50]}>
             <Column field="name" header="Name" filter filterPlaceholder="Search by name" sortable style={{ minWidth: '12rem' }} />

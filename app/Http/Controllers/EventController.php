@@ -244,4 +244,21 @@ class EventController extends Controller
       return back();
     } 
   }
+
+  public function dashboard()
+  {
+    //
+    $user = Auth::user();
+    if ($user->role == 'staff') {
+      $event = event_participant::where('user_id', $user->id)->orderBy('created_at', 'desc')->get();
+      return Inertia::render('Dashboard', [
+        'event' => $event->load('event', 'event.event_facility', 'event.event_facility.facility', 'event.event_participant', 'event.event_participant.user'),
+      ]);
+    }
+    $events = Event::orderBy('created_at', 'desc')->get();
+    return Inertia::render('Dashboard', [
+      'events' => $events->load('event_participant', 'event_facility', 'event_facility.facility', 'event_participant.user'),
+      'status' => session('status'),
+    ]);
+  }
 }

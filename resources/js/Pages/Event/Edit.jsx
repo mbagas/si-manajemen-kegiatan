@@ -19,14 +19,9 @@ export default function AddEvent(props) {
     date_time_end: new Date(props.event.date_time_end),
     participants: props.event.event_participant.map((participant) => participant.user),
     location: props.event.location,
-    facilities: props.event.event_facility.map((facility) => {
-      let data = facility.facility;
-      data.quantity = facility.quantity;
-      return data;
-    }),
+    facilities: []
   });
   console.log('data', data);
-
 
   const handleOnChange = (event) => {
     setData(event.target.name, event.target.type === 'checkbox' ? event.target.checked : event.target.value);
@@ -39,7 +34,7 @@ export default function AddEvent(props) {
   };
 
   return (
-    <AdminLayout user={props.auth.user} dataRequestCount={props.dataRequestCount}>
+    <AdminLayout user={props.auth.user} >
       <Head title="Add event" />
       <div className="w-full px-4 py-5 bg-white rounded-lg shadow">
         <h2 className="text-2xl font-bold">
@@ -118,7 +113,10 @@ export default function AddEvent(props) {
           <div className="mt-4">
             <InputLabel htmlFor="password" value="Facilities" />
 
-            <MultiSelect value={data.facilities} onChange={(e) => setData('facilities', e.value)} options={props.facilities} optionLabel="name"
+            <MultiSelect value={data.facilities} onChange={(e) => {
+              setData('facilities', e.value)
+              console.log('multi', e.value);
+            }} options={props.facilities} optionLabel="name"
               placeholder="Select Facilities" className="mt-2 block w-full" />
 
             <InputError message={errors.facilities} className="mt-2" />
@@ -129,17 +127,16 @@ export default function AddEvent(props) {
             <ul>
               {
                 data.facilities.map((facility, index) => {
-
                   return (
-                    <li>
-
-                      {facility.name} <InputNumber showButtons name={`facilities`} value={facility.quantity}
+                    <li className="mb-3">
+                      {/* props.event?.event_facility[index]?.quantity */}
+                      <span className="mr-2">{facility.name}</span> <InputNumber showButtons name={`facilities`} value={facility.quantity}
                         onChange={(e) => {
                           console.log('e', e)
                           let newFacilities = data.facilities
                           newFacilities[index].quantity = e.value
 
-                          console.log('facilities', newFacilities[index].quantity)
+                          console.log('facilities', newFacilities[index])
                           setData(`facilities`, newFacilities)
                         }} />
                     </li>)

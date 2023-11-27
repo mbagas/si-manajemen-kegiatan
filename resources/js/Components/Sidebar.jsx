@@ -75,7 +75,7 @@ export default function Sidebar({ children, ...props }) {
                   <Link
                     href={route('admin.facility.index')}
                     className="flex items-center p-2 space-x-3 rounded-md"
-                  >      ===
+                  >      
                     <i className="pi pi-flag" style={{ color: 'white', fontSize: '1.5rem' }}></i>
                     <span className="text-gray-100">Master Data Fasilitas</span>
                   </Link>
@@ -205,7 +205,7 @@ export default function Sidebar({ children, ...props }) {
                   </li>
                   <li className="rounded-sm">
                     <Link
-                      href={route('staff.event.index')}
+                      href={route('officeMaid.event.index')}
                       className="flex items-center p-2 space-x-3 rounded-md"
                     >
                       <i className="pi pi-book" style={{ color: 'white', fontSize: '1.5rem' }}></i>
@@ -214,7 +214,7 @@ export default function Sidebar({ children, ...props }) {
                   </li>
                     <li className="rounded-sm">
                       <Link
-                        href={route('admin.facility.index')}
+                        href={route('officeMaid.facility.index')}
                         className="flex items-center p-2 space-x-3 rounded-md"
                       >
                         <i className="pi pi-flag" style={{ color: 'white', fontSize: '1.5rem' }}></i>
