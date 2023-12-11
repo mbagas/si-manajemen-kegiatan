@@ -4,14 +4,17 @@ import { Image } from 'primereact/image';
 import { Button } from 'primereact/button';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
-import { useState, useCallback, useEffect } from "react";
 import InputLabel from '@/Components/InputLabel';
 import { FilterMatchMode, FilterOperator } from 'primereact/api';
 import PrimaryButton from '@/Components/PrimaryButton';
 import { useMemo } from "react";
+import { Dialog } from 'primereact/dialog';
+import React, { useState, useRef, useCallback } from "react";
+import { useReactToPrint } from 'react-to-print';
 
 export default function DetailEvent(props) {
   console.log(props);
+  const [exportVisible, setExportVisible] = useState(false);
   const [loading, setLoading] = useState(false);
   let eventFacility = props.event.event_facility.map(data => ({
     id: data.id,
@@ -39,6 +42,13 @@ export default function DetailEvent(props) {
     event_id: props.auth.user.role === 'staff' ? eventPresence[0].event_id : '',
     status: '',
     notulensi: '',
+  });
+
+  const componentRef = useRef(null);
+  const handlePrint = useReactToPrint({
+    removeAfterPrint: true,
+    content: () => componentRef.current,
+    documentTitle: "AwesomeFileName",
   });
 
   const onSubmitAvailable = (e) => {
@@ -109,6 +119,19 @@ export default function DetailEvent(props) {
   const imageBodyTemplate = (rowData, column) => {
     return <Image src={rowData.image[0]} onError={(e) => e.target.src = "https://webcolours.ca/wp-content/uploads/2020/10/webcolours-unknown.png"} alt="Image" width="100" preview />
   }
+
+  const renderHeader = () => {
+    return (
+      <div className="flex justify-item-end">
+        <div className="ml-4">
+          <Button onClick={() => setExportVisible(true)} icon="pi pi-file-pdf" label="Export PDF" />
+        </div>
+
+      </div>
+    );
+  };
+
+  const header = renderHeader();
 
   return (
     <AdminLayout user={props.auth.user}>
@@ -309,7 +332,7 @@ export default function DetailEvent(props) {
                 Daftar Peserta
               </h4>
               <div className="mt-2">
-                <DataTable value={props.event.event_participant} paginator rows={10} dataKey="id" filters={filters} filterDisplay="row" loading={loading}
+                <DataTable value={props.event.event_participant} paginator rows={10} dataKey="id" filters={filters} header={header} filterDisplay="row" loading={loading}
                   globalFilterFields={['name', 'availablelity', 'status']} emptyMessage="No data found."
                   paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
                   currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" rowsPerPageOptions={[10, 25, 50]}>
@@ -332,6 +355,62 @@ export default function DetailEvent(props) {
         }
         
       </div>
+
+      <Dialog header={'Export Data Kehadiran'} visible={exportVisible} style={{ maxWidth: '90vw', minWidth: '50vw' }} onHide={() => setExportVisible(false)}>
+        <div className="mt-4 text-right">
+          <Button icon="pi pi-check" label="Cetak" severity="success" onClick={handlePrint} />
+        </div>
+        <div className="border border-black mt-4">
+          <div ref={componentRef}>
+            <style type="text/css" media="print">
+              {" \@page {\ size: landscape;\ }\ "}
+            </style>
+
+            <div className="flex flex-col gap-3 md:gap-1 m-10">
+              <div className="grid grid-rows-2 gap-1 h-auto mb-4">
+                <div className="flex justify-center">
+                  <h4 className="text-2xl font-bold justify-self-center">DAFTAR KEHADIRAN PEGAWAI</h4>
+                </div>
+                <div className="flex justify-center">
+                  <h4 className="text-2xl font-bold justify-self-center">KEGIATAN : {props.event.name}</h4>
+                </div>
+
+              </div>
+
+              <div>
+                <table className="border-collapse border border-black w-full">
+                  <thead>
+                    <tr>
+                      <th className="border border-black">Nama</th>
+                      <th className="border border-black">Status</th>
+                      <th className="border border-black">Gambar</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {
+                      props.event.event_participant.map((data, index) => {
+                        return (
+                          <>
+                            <tr>
+                              <td className="border border-black p-1 text-center"> {data.name} </td>
+                              <td className="border border-black p-1 text-center"> {data.presence} </td>
+                              <td className="border border-black p-1 text-center"><Image src={data.image[0]} onError={(e) => e.target.src = "https://webcolours.ca/wp-content/uploads/2020/10/webcolours-unknown.png"} alt="Image" width="100" preview /></td>
+                            </tr>
+                          </>
+                        )
+                      })
+                    }
+                  </tbody>
+                </table>
+
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+
+      </Dialog>
     </AdminLayout>
   )
 
