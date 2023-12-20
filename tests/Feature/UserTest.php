@@ -6,11 +6,11 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
-class EventTest extends TestCase
+class UserTest extends TestCase
 {
-  /**
-   * A basic feature test example.
-   */
+    /**
+     * A basic feature test example.
+     */
   public function test_index(): void
   {
     $response = $this->get('/login');
@@ -24,15 +24,8 @@ class EventTest extends TestCase
 
     $response->assertStatus(200);
   }
-  
+
   public function test_store(): void
-  {
-    $response = $this->get('/login');
-
-    $response->assertStatus(200);
-  }
-
-  public function test_show(): void
   {
     $response = $this->get('/login');
 
@@ -52,25 +45,12 @@ class EventTest extends TestCase
 
     $response->assertStatus(200);
   }
-
+  
   public function test_destroy(): void
   {
     $response = $this->get('/login');
 
     $response->assertStatus(200);
   }
-
-  public function test_dashboard(): void
-  {
-    $response = $this->get('/login');
-
-    $response->assertStatus(200);
-  }
-
-  public function test_updateNotulensi(): void
-  {
-    $response = $this->get('/login');
-
-    $response->assertStatus(200);
-  }
+ 
 }
