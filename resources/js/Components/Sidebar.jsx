@@ -10,12 +10,12 @@ export default function Sidebar({ children, ...props }) {
       <div className="w-screen px-5 py-2 flex justify-between border-b-2 border-gray-300">
         <div className="flex gap-4">
           <div className="">
-            <img src="/logo-kebun.png" style={{
+            <img src="radar.jpg" style={{
               width: '3rem',
               height: 'auto',
             }} alt="Image" />
           </div>
-          <h2 className="text-2xl font-bold inline-block align-middle my-auto">Radar Lampung</h2>
+          <h2 className="text-2xl font-bold inline-block align-middle my-auto">RADAR LAMPUNG</h2>
         </div>
         <div className="text-end my-auto ">
           <button onClick={() => setCollapse(!collapse)} className="visible lg:invisible lg:w-0 right-0">
@@ -32,7 +32,7 @@ export default function Sidebar({ children, ...props }) {
           <div className="space-y-3">
             <div className="flex items-center justify-start p-2">
               <h2 className="text-xl font-bold text-white">
-                Dashboard
+                DASHBOARD
               </h2>
             </div>
             <div className="flex-1">
