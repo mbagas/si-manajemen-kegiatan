@@ -63,7 +63,7 @@ export default function facility(props) {
       <Head title="facility" />
       <div className="w-full px-4 py-5 bg-white rounded-lg shadow">
         <h2 className="text-2xl font-bold">
-          facility
+          Facility
         </h2>
         <div className="mt-2">
           <DataTable value={props.facilities} paginator rows={10} dataKey="id" filters={filters} filterDisplay="row" loading={loading}

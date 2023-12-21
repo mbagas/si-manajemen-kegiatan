@@ -44,7 +44,7 @@ export default function Dashboard(props) {
         <Head title="User" />
         <div className="w-full px-4 py-5 bg-white rounded-lg shadow">
           <h2 className="text-2xl font-bold">
-            Dashboard
+            SISTEM INFORMASI PENGELOLAAN KEGIATAN RADAR LAMPUNG
           </h2>
           <div className="mt-2">
             <h2 className="text-xl font-bold mb-4">

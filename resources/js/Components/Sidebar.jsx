@@ -68,7 +68,7 @@ export default function Sidebar({ children, ...props }) {
                     className="flex items-center p-2 space-x-3 rounded-md"
                   >
                     <i className="pi pi-user" style={{ color: 'white', fontSize: '1.5rem' }}></i>
-                    <span className="text-gray-100">Master Data User</span>
+                    <span className="text-gray-100">Data User</span>
                   </Link>
                 </li>
                 <li className="rounded-sm">
@@ -77,7 +77,7 @@ export default function Sidebar({ children, ...props }) {
                     className="flex items-center p-2 space-x-3 rounded-md"
                   >      
                     <i className="pi pi-flag" style={{ color: 'white', fontSize: '1.5rem' }}></i>
-                    <span className="text-gray-100">Master Data Fasilitas</span>
+                    <span className="text-gray-100">Data Fasilitas</span>
                   </Link>
                 </li>
                 <li className="rounded-sm">
@@ -86,7 +86,7 @@ export default function Sidebar({ children, ...props }) {
                     className="flex items-center p-2 space-x-3 rounded-md"
                   >
                     <i className="pi pi-book" style={{ color: 'white', fontSize: '1.5rem' }}></i>
-                    <span className="text-gray-100">Master Data Kegiatan</span>
+                    <span className="text-gray-100">Data Kegiatan</span>
                   </Link>
                 </li>
                 <li className="rounded-sm">
@@ -218,7 +218,7 @@ export default function Sidebar({ children, ...props }) {
                         className="flex items-center p-2 space-x-3 rounded-md"
                       >
                         <i className="pi pi-flag" style={{ color: 'white', fontSize: '1.5rem' }}></i>
-                        <span className="text-gray-100">Master Data Fasilitas</span>
+                        <span className="text-gray-100">Data Fasilitas</span>
                       </Link>
                     </li>
 

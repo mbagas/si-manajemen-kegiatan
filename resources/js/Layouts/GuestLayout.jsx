@@ -6,7 +6,7 @@ export default function Guest({ children }) {
     <div className="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100">
       <div>
         <h2 className="text-2xl font-bold">
-          Sistem Informasi Manajemen Kegiatan
+          Sistem Informasi Manajemen Pengelolaan Kegiatan
         </h2>
       </div>
 
