@@ -344,10 +344,6 @@ export default function DetailEvent(props) {
                     props.auth.user.role === 'admin' &&
                     <Column header="Image" body={imageBodyTemplate} />
                   }
-                  {
-                    props.auth.user.role === 'admin' &&
-                    <Column field="modifiedTime" header="Action" body={(e) => actionTemplate(e)} style={{ minWidth: '9rem' }} />
-                  }
 
                 </DataTable>
               </div>
