@@ -19,6 +19,26 @@ class EventParticipantController extends Controller
     //
   }
 
+  public function update(Request $request, event_participant $event_participant)
+  {
+    //
+
+    if(is_file($request->image)){
+      $fileName = $request->id . '.' . $request->image->extension();
+      $request->image->move(public_path('eventParticipant'), $fileName);
+      $event_participant->update([
+        'presence' => $request->presence,
+        'image' => $fileName,
+      ]);
+    } else {
+      $event_participant->update([
+        'availability' => $request->availability
+      ]);
+    }
+    
+    return back();
+  }
+  
   /**
    * Show the form for creating a new resource.
    */
@@ -54,25 +74,7 @@ class EventParticipantController extends Controller
   /**
    * Update the specified resource in storage.
    */
-  public function update(Request $request, event_participant $event_participant)
-  {
-    //
-
-    if(is_file($request->image)){
-      $fileName = $request->id . '.' . $request->image->extension();
-      $request->image->move(public_path('eventParticipant'), $fileName);
-      $event_participant->update([
-        'presence' => $request->presence,
-        'image' => $fileName,
-      ]);
-    } else {
-      $event_participant->update([
-        'availability' => $request->availability
-      ]);
-    }
-    
-    return back();
-  }
+  
 
   /**
    * Remove the specified resource from storage.

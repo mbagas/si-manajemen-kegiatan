@@ -22,18 +22,6 @@ class FacilityController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-        return Inertia::render('Facility/Create');
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         //
@@ -49,6 +37,19 @@ class FacilityController extends Controller
 
         return to_route('admin.facility.index')->with('status', 'Facility created.');
     }
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        //
+        return Inertia::render('Facility/Create');
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    
 
     /**
      * Display the specified resource.

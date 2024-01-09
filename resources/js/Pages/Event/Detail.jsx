@@ -332,7 +332,7 @@ export default function DetailEvent(props) {
                 Daftar Peserta
               </h4>
               <div className="mt-2">
-                <DataTable value={props.event.event_participant} paginator rows={10} dataKey="id" filters={filters} header={header} filterDisplay="row" loading={loading}
+                <DataTable value={props.event.event_participant} paginator rows={10} dataKey="id" filters={filters} header={props.auth.user.role === 'admin' && header} filterDisplay="row" loading={loading}
                   globalFilterFields={['name', 'availablelity', 'status']} emptyMessage="No data found."
                   paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
                   currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" rowsPerPageOptions={[10, 25, 50]}>

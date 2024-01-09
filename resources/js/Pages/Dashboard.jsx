@@ -15,8 +15,10 @@ export default function Dashboard(props) {
     date_time_end: { value: null, matchMode: FilterMatchMode.CONTAINS }
   })
   const dateNow = new Date()
-  const dateData = new Date(props.events[0].date_time_start)
-  console.log('date', dateNow.toString(), dateData.toString());
+  // const dateData = new Date(props.events[0].date_time_start)
+  // console.log('date', dateNow.toString(), dateData.toString());
+  console.log(props);
+  let eventList;
   if (props.auth.user.role === 'staff') {
     eventList = props.event.map(data => {
       return data.event;

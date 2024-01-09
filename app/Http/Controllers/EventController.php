@@ -38,23 +38,19 @@ class EventController extends Controller
     ]);
   }
 
-  /**
-   * Show the form for creating a new resource.
-   */
-  public function create()
+  public function updateNotulensi(Request $request, Event $event)
   {
-    //
-    $users = User::all();
-    $facilities = Facility::all();
-    return Inertia::render('Event/Create', [
-      'users' => $users,
-      'facilities' => $facilities,
-    ]);
+   
+    if (is_file($request->notulensi)) {
+      $fileName = $event->id . '.' . $request->notulensi->extension();
+      $request->notulensi->move(public_path('notulensi'), $fileName);
+      $event->update([
+        'notulensi' => $fileName
+      ]);
+      return back();
+    } 
   }
 
-  /**
-   * Store a newly created resource in storage.
-   */
   public function store(Request $request)
   {
     //
@@ -81,17 +77,7 @@ class EventController extends Controller
             'email' => $participant['email'],
             'name' => $participant['name'],
           ]);
-          // $mailData =
-          //   [
-          //     'body' => 'Kamu telah terdaftar pada kegiatan ' . $request->name . '.',
-          //     'date' => 'Waktu : ' . Carbon::parse($request->date_time_start),
-          //     'location' => 'Lokasi : ' . $request->location,
-          //     'confirm' => 'Lakukan konfirmasi kehadiran pada link dibawah ini.',
-          //     'thanks' => 'Terima Kasih',
-          //     'actionText' => 'Buka Web Manajemen Kegiatan Untuk Melihat Detail',
-          //     'actionURL' => url('/'),
-          //   ];
-          // Notification::route('mail', $participant['email'])->notify(new EventNotification($mailData));
+          
         }
 
         foreach ($request->facilities as $facility) {
@@ -132,20 +118,26 @@ class EventController extends Controller
       }
     );
 
-    // $mailData =
-    //   [
-    //     'greeting' => 'Hi ' . $request->name . ',',
-    //     'body' => 'Kamu telah terdaftar pada kegiatan ' . $request->participants[0]['name'] . ' pada tanggal ' . $request->date_time_start . 'di ' . $request->location . '.',
-    //     'result' => 'Lakukan konfirmasi kehadiran pada link dibawah ini.',
-    //     'thanks' => 'Terima Kasih',
-    //     'actionText' => 'Buka Web Manajemen Kegiatan Untuk Melihat Detail',
-    //     'actionURL' => url('/'),
-    //   ];
-    // $participant = User::where('id', $request->participants[0]['id'])->first();
-    // $participant->notify(new EventNotification($mailData));
-
     return to_route('admin.event.index')->with('status', 'Event created.');
   }
+  /**
+   * Show the form for creating a new resource.
+   */
+  public function create()
+  {
+    //
+    $users = User::all();
+    $facilities = Facility::all();
+    return Inertia::render('Event/Create', [
+      'users' => $users,
+      'facilities' => $facilities,
+    ]);
+  }
+
+  /**
+   * Store a newly created resource in storage.
+   */
+  
 
   /**
    * Display the specified resource.
@@ -197,14 +189,19 @@ class EventController extends Controller
         ]);
 
         $event->event_participant()->delete();
+
+        $event->event_facility()->delete();
+
         foreach ($request->participants as $participant) {
           $eventParticipant = event_participant::create([
             'event_id' => $event->id,
             'user_id' => $participant['id'],
+            'email' => $participant['email'],
+            'name' => $participant['name'],
           ]);
+          
         }
 
-        $event->event_facility()->delete();
         foreach ($request->facilities as $facility) {
           $eventFacility = event_facility::create([
             'event_id' => $event->id,
@@ -213,6 +210,34 @@ class EventController extends Controller
             'status' => 'Pending',
           ]);
         }
+
+        $mailData =
+          [
+            'body' => 'Kamu telah terdaftar pada kegiatan ' . $request->name . '.',
+            'date' => 'Waktu : ' . Carbon::parse($request->date_time_start),
+            'location' => 'Lokasi : ' . $request->location,
+            'confirm' => 'Lakukan konfirmasi kehadiran pada link dibawah ini.',
+            'thanks' => 'Terima Kasih',
+            'actionText' => 'Buka Web Manajemen Kegiatan Untuk Melihat Detail',
+            'actionURL' => url('/'),
+          ];
+        $participants = event_participant::where('event_id', $event->id)->get();
+        // $participants->notify(new EventNotification($mailData));
+        Notification::send($participants, new EventNotification($mailData));
+        
+        $officeMaidMailData = 
+          [
+          'body' => 'Terdapat pengajuan fasilitas pada kegiatan ' . $request->name . '.',
+          'date' => 'Waktu : ' . Carbon::parse($request->date_time_start),
+          'location' => 'Lokasi : ' . $request->location,
+          'confirm' => 'Lakukan konfirmasi ketersediaan fasilitas pada link dibawah ini.',
+          'thanks' => 'Terima Kasih',
+          'actionText' => 'Buka Web Manajemen Kegiatan Untuk Melihat Detail',
+          'actionURL' => url('/'),
+          ];
+        $officeMaid = User::where('role', 'office_maid')->get();
+        Notification::send($officeMaid, new EventNotification($officeMaidMailData));
+
       }
     );
 
@@ -232,18 +257,7 @@ class EventController extends Controller
     return to_route('admin.event.index')->with('status', 'Event deleted.');
   }
 
-  public function updateNotulensi(Request $request, Event $event)
-  {
-   
-    if (is_file($request->notulensi)) {
-      $fileName = $event->id . '.' . $request->notulensi->extension();
-      $request->notulensi->move(public_path('notulensi'), $fileName);
-      $event->update([
-        'notulensi' => $fileName
-      ]);
-      return back();
-    } 
-  }
+  
 
   public function dashboard()
   {

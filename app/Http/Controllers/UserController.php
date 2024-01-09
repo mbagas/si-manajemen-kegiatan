@@ -29,18 +29,6 @@ class UserController extends Controller
     ]);
   }
 
-  /**
-   * Show the form for creating a new resource.
-   */
-  public function create()
-  {
-    //
-    return Inertia::render('User/Create');
-  }
-
-  /**
-   * Store a newly created resource in storage.
-   */
   public function store(Request $request)
   {
     //
@@ -62,29 +50,6 @@ class UserController extends Controller
     return to_route('admin.user.index')->with('status', 'User created.');
   }
 
-  /**
-   * Display the specified resource.
-   */
-  public function show(string $id)
-  {
-    //
-  }
-
-  /**
-   * Show the form for editing the specified resource.
-   */
-  public function edit(User $user)
-  {
-    //
-    // dd($user);
-    return Inertia::render('User/Edit', [
-      'user' => $user,
-    ]);
-  }
-
-  /**
-   * Update the specified resource in storage.
-   */
   public function update(Request $request, User $user)
   {
     //
@@ -114,4 +79,44 @@ class UserController extends Controller
     $user->delete();
     return to_route('admin.user.index')->with('status', 'User deleted.');
   }
+
+  
+  /**
+   * Show the form for creating a new resource.
+   */
+  public function create()
+  {
+    //
+    return Inertia::render('User/Create');
+  }
+
+  /**
+   * Store a newly created resource in storage.
+   */
+  
+
+  /**
+   * Display the specified resource.
+   */
+  public function show(string $id)
+  {
+    //
+  }
+
+  /**
+   * Show the form for editing the specified resource.
+   */
+  public function edit(User $user)
+  {
+    //
+    // dd($user);
+    return Inertia::render('User/Edit', [
+      'user' => $user,
+    ]);
+  }
+
+  /**
+   * Update the specified resource in storage.
+   */
+  
 }
