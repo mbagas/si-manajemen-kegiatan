@@ -30,7 +30,7 @@ export default function Addfacility(props) {
       <Head title="Add facility" />
       <div className="w-full px-4 py-5 bg-white rounded-lg shadow">
         <h2 className="text-2xl font-bold">
-          Tambah Fasilitas
+          Edit Fasilitas
         </h2>
         <form onSubmit={submit}>
           <div>
