@@ -10,7 +10,7 @@ export default function Sidebar({ children, ...props }) {
       <div className="w-screen px-5 py-2 flex justify-between border-b-2 border-gray-300">
         <div className="flex gap-4">
           <div className="">
-            <img src="radar.jpg" style={{
+            <img src="/radar.jpg" style={{
               width: '3rem',
               height: 'auto',
             }} alt="Image" />
