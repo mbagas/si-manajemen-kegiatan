@@ -115,7 +115,7 @@ export default function AddUser(props) {
           <div className="mt-4">
             <InputLabel htmlFor="wayToCollect" value="Divisi" />
 
-            <Dropdown value={data.divisi} onChange={(e) => setData('divisi', e.value)} options={['-','keuangan','social media','sales']} 
+            <Dropdown value={data.divisi} onChange={(e) => setData('divisi', e.value)} options={['-', 'Radar Lampung Online', 'Radar Lampung Cetak', 'Radar Lampung TV']} 
               placeholder="Select Divisi" className="w-full md:w-14rem" />
 
             <InputError message={errors.divisi} className="mt-2" />

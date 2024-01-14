@@ -24,6 +24,6 @@ class event_facility extends Model
 
     public function facility(): BelongsTo
     {
-      return $this->belongsTo(facility::class, 'facility_id');
+      return $this->belongsTo(Facility::class, 'facility_id');
     }
 }

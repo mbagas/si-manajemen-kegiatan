@@ -63,10 +63,11 @@ class EventController extends Controller
 
     DB::transaction(
       function () use ($request) {
+        $timeZone = 'Asia/Jakarta';
         $event = Event::create([
           'name' => $request->name,
-          'date_time_start' => Carbon::parse($request->date_time_start),
-          'date_time_end' => Carbon::parse($request->date_time_end),
+          'date_time_start' => Carbon::parse($request->date_time_start)->setTimezone($timeZone)->format('Y-m-d H:i:s'),
+          'date_time_end' => Carbon::parse($request->date_time_end)->setTimezone($timeZone)->format('Y-m-d H:i:s'),
           'location' => $request->location,
         ]);
 
@@ -91,7 +92,7 @@ class EventController extends Controller
         $mailData =
           [
             'body' => 'Kamu telah terdaftar pada kegiatan ' . $request->name . '.',
-            'date' => 'Waktu : ' . Carbon::parse($request->date_time_start),
+            'date' => 'Waktu : ' . Carbon::parse($request->date_time_start)->setTimezone($timeZone)->format('Y-m-d H:i:s'),
             'location' => 'Lokasi : ' . $request->location,
             'confirm' => 'Lakukan konfirmasi kehadiran pada link dibawah ini.',
             'thanks' => 'Terima Kasih',
@@ -105,7 +106,7 @@ class EventController extends Controller
         $officeMaidMailData = 
           [
           'body' => 'Terdapat pengajuan fasilitas pada kegiatan ' . $request->name . '.',
-          'date' => 'Waktu : ' . Carbon::parse($request->date_time_start),
+          'date' => 'Waktu : ' . Carbon::parse($request->date_time_start)->setTimezone($timeZone)->format('Y-m-d H:i:s'),
           'location' => 'Lokasi : ' . $request->location,
           'confirm' => 'Lakukan konfirmasi ketersediaan fasilitas pada link dibawah ini.',
           'thanks' => 'Terima Kasih',
@@ -181,10 +182,11 @@ class EventController extends Controller
 
     DB::transaction(
       function () use ($request, $event) {
+        $timeZone = 'Asia/Jakarta';
         $event->update([
           'name' => $request->name,
-          'date_time_start' => Carbon::parse($request->date_time_start),
-          'date_time_end' => Carbon::parse($request->date_time_end),
+          'date_time_start' => Carbon::parse($request->date_time_start)->setTimezone($timeZone)->format('Y-m-d H:i:s'),
+          'date_time_end' => Carbon::parse($request->date_time_end)->setTimezone($timeZone)->format('Y-m-d H:i:s'),
           'location' => $request->location,
         ]);
 
@@ -214,7 +216,7 @@ class EventController extends Controller
         $mailData =
           [
             'body' => 'Kamu telah terdaftar pada kegiatan ' . $request->name . '.',
-            'date' => 'Waktu : ' . Carbon::parse($request->date_time_start),
+            'date' => 'Waktu : ' . Carbon::parse($request->date_time_start)->setTimezone($timeZone)->format('Y-m-d H:i:s'),
             'location' => 'Lokasi : ' . $request->location,
             'confirm' => 'Lakukan konfirmasi kehadiran pada link dibawah ini.',
             'thanks' => 'Terima Kasih',
@@ -228,7 +230,7 @@ class EventController extends Controller
         $officeMaidMailData = 
           [
           'body' => 'Terdapat pengajuan fasilitas pada kegiatan ' . $request->name . '.',
-          'date' => 'Waktu : ' . Carbon::parse($request->date_time_start),
+          'date' => 'Waktu : ' . Carbon::parse($request->date_time_start)->setTimezone($timeZone)->format('Y-m-d H:i:s'),
           'location' => 'Lokasi : ' . $request->location,
           'confirm' => 'Lakukan konfirmasi ketersediaan fasilitas pada link dibawah ini.',
           'thanks' => 'Terima Kasih',
@@ -250,7 +252,6 @@ class EventController extends Controller
   public function destroy(Event $event)
   {
     //
-    dd($event->event_facility());
     $event->event_facility()->delete();
     $event->event_participant()->delete();
     $event->delete();
