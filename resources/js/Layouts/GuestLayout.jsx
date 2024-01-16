@@ -3,19 +3,24 @@ import { Link } from '@inertiajs/react';
 
 export default function Guest({ children }) {
   return (
-    <div className="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100">
-      <div>
-        <h2 className="text-center text-2xl font-bold">
-          Selamat Datang Di
-        </h2>
-        <h2 className="text-2xl font-bold">
-          Sistem Informasi Manajemen Pengelolaan Kegiatan
-        </h2>
-      </div>
+    <div className="grid grid-cols-1 md:grid-cols-2">
+        <div className="invisible md:visible min-h-screen flex flex-col sm:justify-center justify-content-center items-center pt-6 sm:pt-0">
+          <h2 className="text-2xl font-bold">Sistem Informasi Manajemen Pengelolaan Kegiatan</h2>
+          <img className='mx-auto mt-4' src="/radar.jpg" alt="Logo" width="500" height="500" />
+          
+        </div>
+        <div className="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-slate-100">
+          <div>
+            <Link href="/">
+              
+              <h2 className="text-2xl font-bold">Login</h2>
+            </Link>
+          </div>
 
-      <div className="w-full sm:max-w-md mt-6 px-6 py-4 bg-white shadow-md overflow-hidden sm:rounded-lg">
-        {children}
+          <div className="w-full sm:max-w-md mt-6 px-6 py-4 bg-white shadow-md overflow-hidden sm:rounded-lg">
+            {children}
+          </div>
+        </div>
       </div>
-    </div>
   );
 }
